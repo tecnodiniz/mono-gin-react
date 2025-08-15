@@ -24,7 +24,7 @@ export function UserList() {
           {users?.map((user) => (
             <tr key={user.id}>
               <td>{user.username}</td>
-              <td>{user.roles.join(", ")}</td>
+              <td>{user.roles ? user.roles.join(", ") : "x"}</td>
               <td>{user.active ? "Ativo" : "Inativo"}</td>
               <td>
                 <Link to={user.id}>Ver</Link>
