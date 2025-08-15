@@ -3,7 +3,7 @@ import type { User, UserUpdate } from "./types";
 
 const ENDPOINTS = Object.freeze({
   users: "users",
-  newUser: "users/new",
+  newUser: "users",
   userById: (id: string) => `users/${id}`,
 });
 
