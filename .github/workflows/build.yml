@@ -1,3 +1,5 @@
+name: Build and SonarCloud Analysis
+
 on:
   push:
     branches:
@@ -7,14 +9,16 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-name: Build Workflow
 jobs:
-  sonarqube:
+  sonarcloud:
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Para análise completa de PRs
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,17 +32,36 @@ jobs:
           cd frontend
           npm ci
 
-      - name: Run Frontend Tests with Coverage
+      - name: Run Tests with Coverage
         run: |
           cd frontend
           npm run test:coverage
 
-      - name: Verify Coverage Files
+      - name: Debug Coverage Files
         run: |
+          echo "📊 Coverage files gerados:"
           ls -la frontend/coverage/
-          cat frontend/coverage/lcov.info | head -20
+          echo "📈 Tamanho do lcov.info:"
+          wc -l frontend/coverage/lcov.info
+          echo "📋 Primeiras linhas do coverage:"
+          head -10 frontend/coverage/lcov.info
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
+      # ✨ ACTION CORRETO PARA SONARCLOUD FREE
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # Args específicos para PRs e coverage
+          args: >
+            -Dsonar.verbose=true
+            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+            -Dsonar.typescript.lcov.reportPaths=frontend/coverage/lcov.info
+            -Dsonar.coverage.exclusions=**/main.tsx,**/*.d.ts,**/*.config.{ts,js},**/constants.{ts,tsx},**/types.{ts,tsx},**/interfaces.{ts,tsx},**/test/**,**/*.test.{ts,tsx},**/*.spec.{ts,tsx}
+
+      - name: Upload Coverage Reports (Debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: frontend/coverage/
+          retention-days: 5
