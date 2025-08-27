@@ -51,14 +51,6 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          # Args específicos para PRs e coverage
-          args: >
-            -Dsonar.verbose=true
-            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
-            -Dsonar.typescript.lcov.reportPaths=frontend/coverage/lcov.info
-            -Dsonar.coverage.exclusions=**/main.tsx,**/*.d.ts,**/*.config.{ts,js},**/constants.{ts,tsx},**/types.{ts,tsx},**/interfaces.{ts,tsx},**/test/**,**/*.test.{ts,tsx},**/*.spec.{ts,tsx}
-
       - name: Upload Coverage Reports (Debug)
         uses: actions/upload-artifact@v4
         with:
