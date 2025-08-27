@@ -10,7 +10,12 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:components": "vitest run src/components",
+    "test:services": "vitest run src/services",
+    "test:hooks": "vitest run src/hooks"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.83.0",

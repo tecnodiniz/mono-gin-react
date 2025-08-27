@@ -12,6 +12,7 @@ export const mockApi = {
 vi.mock("@/services/axios", () => ({
   default: mockApi,
 }));
+
 export const createMockResponse = <T>(
   data: T,
   status = 200,
