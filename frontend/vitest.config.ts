@@ -32,6 +32,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
       // Incluir apenas código que deve ter cobertura
+      reportsDirectory: "./coverage",
       include: [
         "src/components/**/*.{ts,tsx}",
         "src/hooks/**/*.{ts,tsx}",
@@ -79,7 +80,6 @@ export default defineConfig({
         //   statements: 90,
         // },
       },
-      reportsDirectory: "./coverage",
     },
   },
 });

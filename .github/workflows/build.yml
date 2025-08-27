@@ -1,44 +1,40 @@
-on:
-  push:
-    branches:
-      - main
-      - develop
-      - "releases/**"
-  pull_request:
-    types: [opened, synchronize, reopened]
+- name: Run Frontend Tests with Coverage
+  run: |
+    cd frontend
+    npm run test:coverage
 
-name: Build Workflow
-jobs:
-  sonarqube:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+- name: Debug Coverage Detalhado
+  run: |
+    echo "=== Coverage Directory ==="
+    ls -la frontend/coverage/
+    echo ""
+    echo "=== LCOV Info (primeiras 30 linhas) ==="
+    head -30 frontend/coverage/lcov.info
+    echo ""
+    echo "=== Contagem de arquivos no LCOV ==="
+    grep -c "^SF:" frontend/coverage/lcov.info || echo "0 arquivos"
+    echo ""
+    echo "=== Paths no LCOV ==="
+    grep "^SF:" frontend/coverage/lcov.info
+    echo ""
+    echo "=== Coverage Summary JSON ==="
+    if [ -f frontend/coverage/coverage-final.json ]; then
+      # Verificar se há coverage > 0
+      node -e "
+        const coverage = require('./frontend/coverage/coverage-final.json');
+        const files = Object.keys(coverage);
+        console.log('Arquivos com coverage:', files.length);
+        files.forEach(file => {
+          const statements = coverage[file].s;
+          const executed = Object.values(statements).filter(s => s > 0).length;
+          const total = Object.values(statements).length;
+          console.log(\`\${file}: \${executed}/\${total} statements executed\`);
+        });
+      "
+    fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.14.0"
-          cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm ci
-
-      - name: Run Frontend Tests with Coverage
-        run: |
-          cd frontend
-          npm run test:coverage
-
-      - name: Verify Coverage Files
-        run: |
-          ls -la frontend/coverage/
-          cat frontend/coverage/lcov.info | head -20
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+- name: SonarQube Scan
+  uses: SonarSource/sonarqube-scan-action@v4
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
