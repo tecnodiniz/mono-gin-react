@@ -1,1 +1,6 @@
 python
+
+.vscode
+.sonarlint
+
+sonar-scan.sh
