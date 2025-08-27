@@ -4,8 +4,8 @@ import { type User, Roles, type UserUpdate } from "@/services/users/types";
 export const createMockUser = (overrides: Partial<User> = {}): User => ({
   id: `user-${Date.now()}`,
   username: "testuser",
-  // NOSONAR: Mock data for testing only
-  password: "hashedpassword123",
+
+  password: "hashedpassword123", // NOSONAR
   preferences: { timezone: "UTC" },
   roles: [Roles.TESTER],
   active: true,
