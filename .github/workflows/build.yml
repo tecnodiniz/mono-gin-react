@@ -28,13 +28,17 @@ jobs:
           cd frontend
           npm ci
 
-      - name: Run Frontend Tests
-        continue-on-error: true
+      - name: Run Frontend Tests with Coverage
         run: |
           cd frontend
-          npm run test:coverage || "No tests configured"
+          npm run test:coverage
+
+      - name: Verify Coverage Files
+        run: |
+          ls -la frontend/coverage/
+          cat frontend/coverage/lcov.info | head -20
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -79,6 +79,7 @@ export default defineConfig({
         //   statements: 90,
         // },
       },
+      reportsDirectory: "./coverage",
     },
   },
 });
