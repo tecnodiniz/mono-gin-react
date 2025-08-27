@@ -31,18 +31,16 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
-      // Incluir apenas código que deve ter cobertura
       reportsDirectory: "./coverage",
+      all: true,
       include: [
         "src/components/**/*.{ts,tsx}",
         "src/hooks/**/*.{ts,tsx}",
         "src/services/**/*.{ts,tsx}",
         "src/utils/**/*.{ts,tsx}",
         "src/pages/**/*.{ts,tsx}",
-        // Incluir App.tsx se contiver lógica de negócio
         "src/App.tsx",
       ],
-      // Excluir do coverage
       exclude: [
         "node_modules/",
         "src/test/**",
@@ -52,13 +50,10 @@ export default defineConfig({
         "src/**/*.css",
         "src/**/*.stories.{ts,tsx}",
         "src/**/*.config.{ts,tsx}",
-        // Excluir arquivos apenas de tipos/interfaces
         "src/**/types.{ts,tsx}",
         "src/**/interfaces.{ts,tsx}",
-        // Excluir arquivos de configuração específicos
         "src/**/constants.{ts,tsx}",
       ],
-      // Configurar thresholds mínimos
       thresholds: {
         global: {
           branches: 80,
@@ -66,19 +61,6 @@ export default defineConfig({
           lines: 80,
           statements: 80,
         },
-        // Thresholds específicos por pasta se necessário
-        // "src/components/": {
-        //   branches: 85,
-        //   functions: 85,
-        //   lines: 85,
-        //   statements: 85,
-        // },
-        // "src/services/": {
-        //   branches: 90,
-        //   functions: 90,
-        //   lines: 90,
-        //   statements: 90,
-        // },
       },
     },
   },
