@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: frontend/coverage
+          path: frontend/coverage/lcov.info
 
   sonarcloud:
     needs: test
