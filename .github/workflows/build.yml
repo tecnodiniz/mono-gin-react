@@ -64,6 +64,8 @@ jobs:
           path: frontend/coverage
 
       - uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          projectBaseDir: frontend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
