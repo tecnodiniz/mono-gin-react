@@ -11,14 +11,12 @@ on:
 
 jobs:
   sonarcloud:
-    name: SonarCloud Analysis
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Para análise completa de PRs
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,23 +35,11 @@ jobs:
           cd frontend
           npm run test:coverage
 
-      - name: Debug Coverage Files
-        run: |
-          echo "📊 Coverage files gerados:"
-          ls -la frontend/coverage/
-          echo "📈 Tamanho do lcov.info:"
-          wc -l frontend/coverage/lcov.info
-          echo "📋 Primeiras linhas do coverage:"
-          head -10 frontend/coverage/lcov.info
-
-      # ✨ ACTION CORRETO PARA SONARCLOUD FREE
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: frontend
+          args: >
+            -Dsonar.qualitygate.wait=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Upload Coverage Reports (Debug)
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: frontend/coverage/
-          retention-days: 5
