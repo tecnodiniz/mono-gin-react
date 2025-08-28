@@ -16,11 +16,13 @@ jobs:
       run:
         working-directory: frontend
     steps:
+      # Checkout
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -28,12 +30,15 @@ jobs:
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
+      # Instalar dependências
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Tests with Coverage
-        run: npm run test:coverage
+      # Rodar testes de todo o projeto e gerar cobertura completa
+      - name: Run Full Tests with Coverage
+        run: npm run test:coverage -- --coverage
 
+      # Salvar cobertura completa como artefato
       - name: Save Coverage Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,23 +50,32 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
+      # Checkout
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Download coverage artifact
+      # Baixar relatório completo
+      - name: Download Coverage Artifact
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
           path: frontend/coverage
 
+      # Rodar SonarCloud
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: frontend
           args: >
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.qualitygate.wait=true
+            -Dsonar.pullrequest.provider=github
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
