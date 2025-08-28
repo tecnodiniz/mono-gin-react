@@ -40,7 +40,6 @@ jobs:
         with:
           projectBaseDir: frontend
           args: >
-            -Dproject.settings=../sonar-project.properties
             -Dsonar.qualitygate.wait=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
