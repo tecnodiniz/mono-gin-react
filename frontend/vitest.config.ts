@@ -16,7 +16,7 @@ export default defineConfig({
       "src/test/**/*.test.{js,ts,jsx,tsx}",
     ],
     exclude: [
-      "node_modules/",
+      "node_modules/**",
       "src/test/fixtures/**",
       "src/test/utils/**",
       "src/test/config/**",
@@ -26,13 +26,13 @@ export default defineConfig({
       "src/**/*.css",
     ],
     coverage: {
-      provider: "istanbul", // 🔄 mais estável para gerar lcov
-      reporter: ["text", "json", "html", "lcov"],
+      provider: "istanbul", // 🔄 gera lcov 100% compatível com Sonar
+      reporter: ["text", "json", "html", "lcov"], // lcov = obrigatório p/ sonar
       reportsDirectory: "./coverage",
-      all: true, // força gerar cobertura de todos os arquivos
-      include: ["src/**/*.{ts,tsx}"],
+      all: true, // 🔄 garante que todos os arquivos entrem no report, mesmo sem teste
+      include: ["src/**/*.{ts,tsx}"], // pega tudo da src
       exclude: [
-        "node_modules/",
+        "node_modules/**",
         "src/test/**",
         "src/assets/**",
         "src/**/*.d.ts",
