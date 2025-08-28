@@ -36,7 +36,7 @@ jobs:
 
       # Rodar testes de todo o projeto e gerar cobertura completa
       - name: Run Full Tests with Coverage
-        run: npm run test:coverage -- --coverage
+        run: npm run test:coverage
 
       # Salvar cobertura completa como artefato
       - name: Save Coverage Report
