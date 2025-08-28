@@ -65,7 +65,7 @@ jobs:
 
       # Rodar SonarCloud
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarqube-scan-action@v5
         with:
           projectBaseDir: frontend
           args: >
