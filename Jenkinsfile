@@ -64,6 +64,9 @@ def notifyGitHub(String context, String status, String description) {
         context: context,
         status: status,
         description: description,
-        accessTokenVariable: 'GITHUB_CREDENTIALS'
+        repo: 'tecnodiniz/mono-gin-react',
+        sha: env.GIT_COMMIT,
+        credentialsId: 'github-pat',
+        account: 'tecnodiniz'
     )
 }
