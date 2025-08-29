@@ -15,7 +15,7 @@ export function UserUpdate() {
   return <UserEditForm user={user} id={id!} />;
 }
 
-function UserEditForm({ user, id }: { user: User; id: string }) {
+function UserEditForm({ user, id }: Readonly<{ user: User; id: string }>) {
   const updateUser = useUpdateUser();
   const {
     register,

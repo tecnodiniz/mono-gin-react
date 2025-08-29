@@ -41,13 +41,7 @@ pipeline {
                     def scannerHome = tool 'SonarScanner'
                     withSonarQubeEnv() {
                         dir('frontend') {
-                            def prArgs = ''
-                            if(env.CHANGE_ID){
-                                prArgs = "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
-                                         "-Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} " +
-                                         "-Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
-                            }
-                            sh "${scannerHome}/bin/sonar-scanner ${prArgs}"
+                            sh "${scannerHome}/bin/sonar-scanner "
                         }
                     }
                 }
