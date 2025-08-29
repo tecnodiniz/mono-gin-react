@@ -4,18 +4,22 @@ pipeline {
   stages {
     stage('SCM') {
       steps {
+        githubNotify context: 'ci/jenkins/scm', status: 'PENDING', description: 'Checkout'
         checkout scm
         echo "Branch atual: ${env.GIT_BRANCH ?: env.BRANCH_NAME}"
+        githubNotify context: 'ci/jenkins/scm', status: 'SUCCESS', description: 'Checkout ok'
       }
     }
 
     stage('Frontend Test') {
       tools {nodejs "Node24"}
       steps {
+        githubNotify context: 'ci/jenkins/tests', status: 'PENDING', description: 'Rodando testes'
         dir('frontend') {
           sh 'npm ci'
           sh 'npm run test:coverage'
         }
+        githubNotify context: 'ci/jenkins/tests', status: 'SUCCESS', description: 'Testes ok'
       }
     }
 
@@ -25,11 +29,27 @@ pipeline {
           def scannerHome = tool 'SonarScanner'
           withSonarQubeEnv() {
             dir('frontend') {
-              sh "${scannerHome}/bin/sonar-scanner"
+              def prArgs = ''
+              if(env.CHANGE_ID){
+                prArgs = "-Dsonar.pullrequest.key=${env.CHANGE_ID}" +
+                         "-Dsonar.pullrequest.branch=${env.CHANGE_BRANCH}" +
+                         "-Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
+              }
+              sh "${scannerHome}/bin/sonar-scanner ${prArgs}"
             }
           }
         }
       }
+    }
+
+  }
+
+  post {
+    success {
+      githubNotify context: 'ci/jenkins/pipeline', status: 'SUCCESS', description: 'Pipeline succeeded'
+    }
+    failure {
+      githubNotify context: 'ci/jenkins/pipeline', status: 'FAILURE', description: 'Pipeline failed'
     }
   }
 }
