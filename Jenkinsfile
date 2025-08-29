@@ -1,30 +1,37 @@
 pipeline {
   agent any
 
-    environment {
-      // Define a credencial do GitHub para todos os stages
-      GITHUB_CREDENTIALS = credentials('github-pat')
-    }
+  environment {
+    GITHUB_CREDENTIALS = credentials('github-pat')
+  }
 
   stages {
     stage('SCM') {
       steps {
-        githubNotify context: 'ci/jenkins/scm', status: 'PENDING', description: 'Checkout'
+        script {
+          notifyGitHub('ci/jenkins/scm', 'PENDING', 'Checkout')
+        }
         checkout scm
         echo "Branch atual: ${env.GIT_BRANCH ?: env.BRANCH_NAME}"
-        githubNotify context: 'ci/jenkins/scm', status: 'SUCCESS', description: 'Checkout ok'
+        script {
+          notifyGitHub('ci/jenkins/scm', 'SUCCESS', 'Checkout ok')
+        }
       }
     }
 
     stage('Frontend Test') {
-      tools {nodejs "Node24"}
+      tools { nodejs "Node24" }
       steps {
-        githubNotify context: 'ci/jenkins/tests', status: 'PENDING', description: 'Rodando testes'
+        script {
+          notifyGitHub('ci/jenkins/tests', 'PENDING', 'Rodando testes')
+        }
         dir('frontend') {
           sh 'npm ci'
           sh 'npm run test:coverage'
         }
-        githubNotify context: 'ci/jenkins/tests', status: 'SUCCESS', description: 'Testes ok'
+        script {
+          notifyGitHub('ci/jenkins/tests', 'SUCCESS', 'Testes ok')
+        }
       }
     }
 
@@ -46,19 +53,23 @@ pipeline {
         }
       }
     }
-
   }
 
   post {
     success {
-      githubNotify context: 'ci/jenkins/pipeline', status: 'SUCCESS', description: 'Pipeline succeeded'
+      script {
+        notifyGitHub('ci/jenkins/pipeline', 'SUCCESS', 'Pipeline succeeded')
+      }
     }
     failure {
-      githubNotify context: 'ci/jenkins/pipeline', status: 'FAILURE', description: 'Pipeline failed'
+      script {
+        notifyGitHub('ci/jenkins/pipeline', 'FAILURE', 'Pipeline failed')
+      }
     }
   }
 }
 
+// Função utilitária para enviar status ao GitHub
 def notifyGitHub(String context, String status, String description) {
     githubNotify(
         context: context,
