@@ -42,12 +42,6 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            when {
-                anyOf {
-                    branch 'main'
-                    changeRequest()
-                }
-            }
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner'
