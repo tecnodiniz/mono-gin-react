@@ -20,12 +20,6 @@ pipeline {
         }
 
         stage('Frontend Test') {
-            when {
-                anyOf {
-                    branch 'main'
-                    changeRequest() // só executa para PRs
-                }
-            }
             tools { nodejs "Node24" }
             steps {
                 script {
