@@ -5,7 +5,7 @@ export const createMockUser = (overrides: Partial<User> = {}): User => ({
   id: `user-${Date.now()}`,
   username: "testuser",
 
-  password: "hashedpassword123", // NOSONAR
+  password: "hashedpassword123",
   preferences: { timezone: "UTC" },
   roles: [Roles.TESTER],
   active: true,

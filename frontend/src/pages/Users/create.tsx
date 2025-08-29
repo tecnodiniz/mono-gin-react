@@ -3,9 +3,11 @@ import { useNavigate } from "react-router";
 
 import { Roles, type User } from "../../services/users/types";
 import { useCreateUser } from "./hooks";
+import { useEffect, useState } from "react";
 
 export function UserCreate() {
   const { mutate: createUser, isPending } = useCreateUser();
+  const [password, setPassword] = useState<string>();
   const navigate = useNavigate();
   const {
     register,
@@ -31,6 +33,9 @@ export function UserCreate() {
 
   if (isPending) return "Processando...";
 
+  useEffect(() => {
+    setPassword("123456");
+  }, []);
   return (
     <>
       <form onSubmit={onSubmit}>
