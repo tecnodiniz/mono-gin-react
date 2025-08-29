@@ -10,6 +10,7 @@ pipeline {
     }
 
     stage('Frontend Test') {
+      tools {nodejs: "Node24"}
       steps {
         dir('frontend') {
           sh 'npm ci'
