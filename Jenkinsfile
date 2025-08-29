@@ -55,3 +55,4 @@ def notifyGitHub(String context, String status, String description) {
         account: 'tecnodiniz'
     )
 }
+}
