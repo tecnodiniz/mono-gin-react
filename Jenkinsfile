@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+    environment {
+      // Define a credencial do GitHub para todos os stages
+      GITHUB_CREDENTIALS = credentials('github-pat')
+    }
+
   stages {
     stage('SCM') {
       steps {
@@ -52,4 +57,13 @@ pipeline {
       githubNotify context: 'ci/jenkins/pipeline', status: 'FAILURE', description: 'Pipeline failed'
     }
   }
+}
+
+def notifyGitHub(String context, String status, String description) {
+    githubNotify(
+        context: context,
+        status: status,
+        description: description,
+        accessTokenVariable: 'GITHUB_CREDENTIALS'
+    )
 }
