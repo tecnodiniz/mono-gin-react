@@ -32,7 +32,7 @@ export function UserCreate() {
   if (isPending) return "Processando...";
 
   return (
-    <>
+    <div>
       <form onSubmit={onSubmit}>
         <label htmlFor="username">Usuário</label>
         <input
@@ -67,6 +67,6 @@ export function UserCreate() {
 
         <input type="submit" value="Criar usuário" />
       </form>
-    </>
+    </div>
   );
 }
