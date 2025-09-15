@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 import { Roles, type User } from "../../services/users/types";
 import { useCreateUser } from "./hooks";
+import { Button } from "@/components/button";
 
 export function UserCreate() {
   const { mutate: createUser, isPending } = useCreateUser();
@@ -67,6 +68,9 @@ export function UserCreate() {
 
         <input type="submit" value="Criar usuário" />
       </form>
+
+      {/*  */}
+      <Button />
     </div>
   );
 }
