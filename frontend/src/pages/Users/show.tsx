@@ -4,32 +4,48 @@ import { useEffect, useState } from "react";
 import type { User } from "../../services/users/types";
 
 export function ShowUser() {
-  const { id } = useParams();
-  const { data: user, isLoading, isError } = useUser(id || "");
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchUsers = () => {
-    return fetch("http://localhost:5000/v1/users").then((res) => res.json());
+    setLoading(true);
+    setTimeout(() => {
+      setUsers(
+        (prev) =>
+          [
+            ...prev,
+            {
+              id: "1",
+              username: "user1",
+              password: "pass1",
+              active: true,
+              created_ts: "",
+              roles: ["admin"],
+            },
+            {
+              id: "2",
+              username: "user2",
+              password: "pass2",
+              active: false,
+              created_ts: "",
+              roles: ["user"],
+            },
+          ] as User[]
+      );
+
+      setLoading(false);
+    }, 1000);
   };
 
   useEffect(() => {
-    fetchUsers().then((data) => setUsers(data));
+    fetchUsers();
   }, []);
 
-  if (isLoading) return "carregando...";
-  if (isError) return "erro";
-  if (!user) return "Usuário não encontrado";
+  if (loading) return "carregando...";
 
   return (
     <>
-      <Link to="/users">Voltar</Link>
-      {user.id}
-      Hello user {user?.username} <br />
-      {user.password}
-      {user.active}
-      {user.created_ts}
-      {user.roles.map((role) => role)}
-      <h1>Sem react query</h1>
+      <h1>Sem api</h1>
       <ul>
         {users?.map((user) => (
           <li key={user.id}>{user.username}</li>

@@ -19,7 +19,7 @@
 
 # Dependency management
 vendor/
-go.mod
+
 go.sum
 
 # Logs and temporary files
@@ -33,4 +33,3 @@ Thumbs.db
 
 
 #envs
-.env
