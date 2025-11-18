@@ -63,7 +63,7 @@ pipeline {
     }
 }
 
-// Função utilitária para enviar status ao GitHub
+
 def notifyGitHub(String context, String status, String description) {
     githubNotify(
         context: context,
