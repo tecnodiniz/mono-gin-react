@@ -1,0 +1,25 @@
+@Library('Eco3030JenkinsSharedLib') _
+
+pipeline {
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.56.1-noble'
+        }
+    }
+    
+    stages {
+        stage('Playwright Tests') {
+            steps {
+                dir('frontend') {  // ← Entra no diretório frontend
+                    script {
+                        def nodeBuilder = new com.economatica.build.Node(
+                            this,
+                            [context: 'development']
+                        )
+                        nodeBuilder.testPlaywright()
+                    }
+                }
+            }
+        }
+    }
+}
